@@ -1,6 +1,5 @@
 package javezProject.model;
 
-
 import javax.persistence.*;
 
 @Entity

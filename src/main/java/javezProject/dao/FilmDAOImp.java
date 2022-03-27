@@ -42,6 +42,15 @@ public class FilmDAOImp implements FilmDAO {
         Session session = sessionFactory.getCurrentSession();
         session.update(films);
     }
+    @Override
+    public void saveOrUpdate(Films newFilm, int oldFilmId) {
+        Session session = sessionFactory.getCurrentSession();
+        if (oldFilmId == 0) { // Наш AtomicInteger начинаеться с 1, следовательно controller создает новый фильм со значением id=0
+                    session.update(newFilm);
+        } else {
+            add(newFilm);
+        }
+    }
 
     @Override
     public Films getById(int id) {

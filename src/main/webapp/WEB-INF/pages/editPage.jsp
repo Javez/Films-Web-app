@@ -2,38 +2,53 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-  <c:if test="${empty films.title}">
-    <title>Add</title>
-  </c:if>
-  <c:if test="${!empty films.title}">
-    <title>Edit</title>
-  </c:if>
+  <link href="<c:url value="/resource/style.css"/>" rel="stylesheet" type="text/css"/>
+  <link rel="icon" type="image/png" href="<c:url value="/resource/testICON.jpg"/>"/>
+  <c:choose>
+    <c:when test="${empty film.title}">
+      <title>Add</title>
+    </c:when>
+    <c:otherwise>
+      <title>Edit</title>
+    </c:otherwise>
+  </c:choose>
 </head>
 <body>
-<c:if test="${empty films.title}">
-  <c:url value="/add" var="var"/>
-</c:if>
-<c:if test="${!empty films.title}">
-  <c:url value="/edit" var="var"/>
-</c:if>
-<form action="${var}" method="POST">
-  <c:if test="${!empty films.title}">
-    <input type="hidden" name="id" value="${films.id}">
-  </c:if>
-  <label for="title">Title</label>
-  <input type="text" name="title" id="title">
-  <label for="year">Year</label>
-  <input type="text" name="year" id="year">
-  <label for="genre">Genre</label>
-  <input type="text" name="genre" id="genre">
-  <label for="watched">Watched</label>
-  <input type="text" name="watched" id="watched">
-  <c:if test="${empty films.title}">
-    <input type="submit" value="Add new films">
-  </c:if>
-  <c:if test="${!empty films.title}">
-    <input type="submit" value="Edit films">
-  </c:if>
+<c:url value="/add" var="addUrl"/>
+<c:url value="/edit/{id}" var="editUrl"/>
+<form class="style" action="${empty film.title ? addUrl : editUrl}" name="film" method="POST">
+  <c:choose>
+    <c:when test="${!empty film.title}">
+      <p class="heading">Edit film</p>
+      <input type="hidden" name="id" value="${film.id}">
+    </c:when>
+    <c:otherwise>
+      <p class="heading">Add new film</p>
+    </c:otherwise>
+  </c:choose>
+  <p><input type="text" name="title" placeholder="title" value="${film.title}" maxlength="100" required autofocus
+            pattern="^[^\s]+(\s.*)?$">
+  <p><input type="number" name="year" placeholder="year" value="${film.year}" maxlength="4" required
+            oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);">
+  <p><input type="text" name="genre" placeholder="genre" value="${film.genre}" maxlength="20" required>
+  <p class="checkbox">
+    <label for="watched">watched
+      <c:if test="${film.watched == true}">
+        <input type="checkbox" name="watched" id="watched" value="${film.watched}" checked>
+      </c:if>
+      <c:if test="${film.watched != true}">
+        <input type="checkbox" name="watched" id="watched">
+      </c:if>
+      <span class="checkbox-common checkbox-no">no</span>
+      <span class="checkbox-common checkbox-yes">yes</span>
+    </label>
+  </p>
+  <p>
+    <c:set value="add" var="add"/>
+    <c:set value="edit" var="edit"/>
+    <input type="submit" value="${empty film.title ? add : edit}">
+  </p>
+  <p class="heading">${message}</p>
 </form>
 </body>
 </html>

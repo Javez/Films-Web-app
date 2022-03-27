@@ -43,6 +43,12 @@ public class FilmServiceImp implements FilmService {
 
     @Override
     @Transactional
+    public void saveOrUpdate(Films newFilm, int oldFilmId) {
+        filmDAO.saveOrUpdate(newFilm, oldFilmId);
+    }
+
+    @Override
+    @Transactional
     public Films getById(int id) {
         return filmDAO.getById(id);
     }
